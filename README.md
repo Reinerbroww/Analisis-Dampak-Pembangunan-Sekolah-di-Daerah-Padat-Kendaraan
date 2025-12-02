@@ -1,254 +1,126 @@
-🗺️ **UAS GIS — Analisis Sekolah vs Kepadatan Kendaraan
+# 🗺️ UAS GIS — Analisis Sekolah & Kepadatan Kendaraan  
+### Studi Kasus: Kota Surabaya
+
+Proyek ini merupakan tugas UAS Sistem Informasi Geografis (SIG) yang bertujuan menganalisis:
+1. Dampak lokasi sekolah yang berada di area padat kendaraan.
+2. Menentukan lokasi rekomendasi sekolah baru di zona minim kendaraan dengan ketersediaan lahan kosong.
+
+Seluruh analisis dilakukan menggunakan data OpenStreetMap dan pengolahan peta pada QGIS.
+
+---
+
+## 📌 1. Tujuan Proyek
+- Mengidentifikasi sekolah yang berada di dekat jalan-jalan utama yang berpotensi padat kendaraan.
+- Melakukan analisis buffer dan overlay untuk menentukan dampak lalu lintas terhadap sekolah.
+- Menemukan lokasi terbaik untuk pembangunan sekolah baru berdasarkan:
+  - Daerah minim kendaraan
+  - Kedekatan dengan permukiman
+  - Ketersediaan lahan kosong
+- Menghasilkan peta akhir berupa:
+  - Peta sebaran sekolah
+  - Peta buffer jalan utama
+  - Peta sekolah terdampak kepadatan kendaraan
+  - Peta zona minim kendaraan
+  - Peta rekomendasi lokasi sekolah
+
+---
+
+## 📌 2. Data yang Digunakan
+Semua data diambil dari OpenStreetMap melalui plugin **QuickOSM** di QGIS:
+
+- Batas Administrasi Kota Surabaya  
+- Jalan (highway: motorway, trunk, primary, secondary, tertiary)  
+- Titik sekolah (amenity: school)  
+- Permukiman (landuse: residential)  
+- Lahan kosong (landuse: grass, vacant, brownfield, meadow)
+
+---
+
+## 📌 3. Alur Analisis GIS
+### **A. Analisis Dampak Sekolah di Daerah Padat Kendaraan**
+1. Filter jalan utama → motorway, trunk, primary, secondary  
+2. Buat buffer 0–50 m (sangat padat) dan 50–150 m (padat)  
+3. Lakukan **intersection** dengan titik sekolah untuk melihat sekolah yang terkena dampak  
+4. Simpulkan hasil sebaran dan jumlah sekolah terdampak
+
+### **B. Rekomendasi Lokasi Sekolah Baru**
+1. Buat buffer >150–200 m dari jalan utama → zona minim kendaraan  
+2. Buat buffer permukiman 300 m → sekolah harus dekat warga  
+3. Overlay (intersection) zona minim kendaraan + buffer permukiman + lahan kosong  
+4. Tentukan lokasi rekomendasi final yang memenuhi semua kriteria
+
+---
+
+## 📌 4. Pembagian Tugas Kelompok (3 Orang)
+
+### 👤 **1. Reiner Dominicus (Saya) — Bagian Analisis**
+- Menyusun alur analisis GIS secara lengkap  
+- Menjelaskan metodologi dalam laporan  
+- Menulis hasil analisis dampak sekolah  
+- Menulis bagian rekomendasi lokasi sekolah  
+- Menyusun narasi untuk setiap peta yang dibuat  
+- Mengkoordinasi proses pengerjaan agar hasil peta sesuai analisis
+
+> *Catatan:* Tidak membuat peta di QGIS, fokus pada analisis & penulisan.
+
+---
+
+### 👤 **2. Andika — Bagian Peta & QGIS**
+- Mengumpulkan data OpenStreetMap via QuickOSM  
+- Melakukan proses:
+  - Filter jalan
+  - Buffer jalan utama
+  - Overlay dampak sekolah
+  - Buffer permukiman
+  - Overlay penentuan lokasi rekomendasi  
+- Mendesain map layout (titel, legenda, skala, north arrow)
+
+---
+
+### 👤 **3. Pashya — Bagian Peta & Visualisasi Final**
+- Membuat styling layer (warna jalan, sekolah, zona buffer, dan permukiman)  
+- Membuat peta final:
+  - Peta sebaran sekolah
+  - Peta buffer dan dampak sekolah
+  - Peta zona minim kendaraan
+  - Peta rekomendasi lokasi sekolah  
+- Mengekspor peta final ke format PNG/PDF  
+- Mengatur tata letak peta di laporan (jika diperlukan)
+
+---
+
+## 📌 5. Output Yang Dihasilkan
+- Peta sebaran sekolah di Kota Surabaya  
+- Peta jalan utama dan zona padat kendaraan  
+- Peta sekolah terdampak kepadatan kendaraan  
+- Peta zona minim kendaraan  
+- Peta lahan kosong  
+- Peta rekomendasi lokasi sekolah baru  
+- Analisis tertulis dalam laporan akhir
+
+---
 
-(Studi Kasus: Kota Surabaya)**
-Tema:
-1️⃣ Analisis dampak sekolah di daerah padat kendaraan
-2️⃣ Rekomendasi lokasi sekolah di zona minim kendaraan + tersedia lahan kosong
+## 📌 6. Tool yang Digunakan
+- **QGIS 3.x**  
+- **QuickOSM Plugin**  
+- Data **OpenStreetMap (OSM)**  
+- Google Satellite (untuk referensi lahan kosong opsional)
 
-⭐ BAGIAN 1 — DATA YANG HARUS LO DOWNLOAD
-✔ 1. Batas Administrasi Kota Surabaya
+---
 
-Sumber:
+## 📌 7. Cara Menjalankan Proyek di QGIS
+1. Clone repo ini atau download ZIP  
+2. Buka QGIS → Load semua layer yang ada di folder project  
+3. Pastikan struktur folder tidak berubah  
+4. Jika layer kosong, lakukan QuickOSM kembali menggunakan tag di atas  
+5. Ikuti alur analisis yang sudah dijelaskan (buffer → overlay → intersect → layout)
 
-https://osm-boundaries.com
+---
 
-atau
+## 📌 8. Lisensi
+Proyek ini hanya untuk kebutuhan tugas UAS GIS dan tidak digunakan untuk keperluan profesional.
 
-Download langsung dari QGIS (QuickOSM)
+---
 
-Layer: Polygon boundary Surabaya
-
-✔ 2. Layer Jalan (Roads) Surabaya
-
-Sumber: OpenStreetMap → QuickOSM (di QGIS)
-Tag:
-
-Key: highway
-Value: primary; secondary; tertiary; residential; trunk; motorway
-
-
-Ini nanti penting buat:
-
-Analisis zona padat kendaraan (jalan utama)
-
-Buffer jalan
-
-Menentukan aksesibilitas
-
-✔ 3. Layer Titik Sekolah (SD–SMP–SMA)
-
-Masih dari OSM → QuickOSM
-Tag:
-
-Key: amenity
-Value: school
-
-✔ 4. Layer Permukiman (Landuse Residential)
-
-QuickOSM
-Tag:
-
-Key: landuse
-Value: residential
-
-
-Ini dipakai untuk rekomendasi lokasi (sekolah harus dekat pemukiman penduduk).
-
-✔ 5. Layer Lahan Kosong (Empty Land)
-
-Gunakan OSM juga:
-Tag:
-
-Key: landuse
-Value: grass; meadow; vacant; brownfield
-
-
-Kalau kurang lengkap →
-Tambahin manual via digitizing (Polygon) berdasarkan citra satelit.
-
-✔ 6. (Opsional tapi sangat berguna)
-
-Layer Jalan arteri utama saja (motoway, trunk, primary).
-Ini yang akan dianggap “daerah padat kendaraan”.
-
-⭐ BAGIAN 2 — ALUR ANALISIS GIS (PENTING)
-
-Gue bagi 2 bagian sesuai judul tugas lo:
-
-🔶 A. Analisis Dampak Sekolah di Daerah Padat Kendaraan
-STEP 1 — Tentukan Jalan Padat Kendaraan
-
-Gunakan elemen jalan berikut:
-
-motorway
-
-trunk
-
-primary
-
-secondary
-
-Caranya:
-Filter di QGIS →
-Layer → Filter → highway IN (‘primary’, ‘secondary’, ‘trunk’, ‘motorway’)
-
-STEP 2 — Buat Buffer Jalan Utama
-
-Tujuannya: menentukan zona padat kendaraan.
-
-Rekomendasi:
-
-Buffer 0–50 meter → sangat padat kendaraan
-
-Buffer 50–150 meter → masih terdampak
-
-QGIS:
-Vector → Geoprocessing Tools → Buffer
-
-Output: layer poligon zona padat kendaraan.
-
-STEP 3 — Identifikasi sekolah di dalam zona padat kendaraan
-
-Gunakan:
-Vector → Geoprocessing → Intersection
-
-Input:
-
-Layer buffer jalan utama
-
-Layer titik sekolah
-
-Output:
-
-Sekolah yang terkena dampak kemacetan/kepadatan kendaraan
-
-Hasil analisis bisa lo tulis:
-
-Jumlah sekolah yang berada di dalam buffer 50m
-
-Jumlah sekolah dalam buffer 150m
-
-Sebaran sekolah dekat jalan utama
-
-🔶 B. Rekomendasi Lokasi Sekolah di Zona Minim Kendaraan
-STEP 4 — Tentukan Zona Minim Kendaraan
-
-Cara simple tapi sangat efektif:
-
-1️⃣ Buat buffer negatif (dari jalan utama)
-
-Buat buffer 150–200 meter dari jalan → artinya semakin jauh dari jalan besar, semakin minim kendaraan
-
-2️⃣ Balikkan area (Difference)
-
-Pakai Vector → Geoprocessing → Difference
-
-Study area (Surabaya) dikurangi buffer 200m
-
-Hasilnya = zona minim kendaraan
-
-STEP 5 — Cari area sekolah harus dekat permukiman
-
-Gunakan layer landuse = residential.
-
-Buat buffer:
-
-300 meter dari permukiman → artinya sekolah harus dekat warga, tidak terlalu jauh
-
-STEP 6 — Overlay kriteria
-
-Lakukan intersect 3 layer:
-
-Zona minim kendaraan
-
-Buffer permukiman (zona dekat warga)
-
-Lahan kosong (empty land)
-
-Vector → Geoprocessing → Intersect
-
-Output:
-👉 Kandidat lokasi baru sekolah yang ideal
-
-STEP 7 — Pilih rekomendasi terbaik
-
-Kriteria yang bisa lo tulis:
-
-jauh dari jalan besar (aman, minim bising)
-
-dekat permukiman (akses mudah)
-
-berada di lahan kosong
-
-luas area memadai
-
-Lo bisa pilih 1–2 lokasi saja untuk laporan.
-
-⭐ BAGIAN 3 — ALUR PENGERJAAN DI QGIS (STEP-BY-STEP)
-1. Buka QGIS → Project baru
-2. Download data via plugin QuickOSM
-3. Load semua layer ke canvas
-4. Styling layer biar rapi
-Rekomendasi warna:
-
-Jalan utama = merah
-
-Jalan lain = abu
-
-Sekolah = biru
-
-Permukiman = kuning transparan
-
-Zona padat kendaraan = merah transparan
-
-Zona minim kendaraan = hijau muda
-
-Lahan kosong = hijau tua
-
-5. Lakukan analisis buffer
-6. Lakukan overlay (intersection, difference)
-7. Pilih lokasi rekomendasi
-8. Buat Layout Peta
-
-Masuk:
-Project → New Print Layout
-
-Isi:
-
-Judul peta
-
-Legenda
-
-North Arrow
-
-Skala
-
-Nama kelompok
-
-Sumber data: OpenStreetMap
-
-⭐ BAGIAN 4 — NARASI ANALISIS (SIAP MASUK LAPORAN)
-
-(bro tinggal copy)
-
-1️⃣ Analisis Dampak Sekolah di Daerah Padat Kendaraan
-
-Hasil buffer pada jalan-jalan utama Kota Surabaya menunjukkan bahwa sejumlah sekolah berada dalam radius 50–150 meter dari jalan arteri. Sekolah-sekolah ini berpotensi mengalami dampak kebisingan, kepadatan lalu lintas, hingga risiko kecelakaan yang lebih tinggi. Analisis intersection antara zona padat kendaraan dan titik sekolah memperlihatkan bahwa sebagian lembaga pendidikan terletak di area dengan mobilitas kendaraan yang tinggi, khususnya pada koridor Ahmad Yani, Margorejo, Wonokromo, dan Kenjeran.
-
-2️⃣ Rekomendasi Lokasi Baru di Zona Minim Kendaraan
-
-Area berjarak lebih dari 200 meter dari jalan utama diidentifikasi sebagai zona minim kendaraan. Zona ini kemudian di-overlay dengan permukiman sehingga hanya area yang dekat dengan warga (dalam radius 300 meter) yang dipertimbangkan. Dari hasil intersect antara zona minim kendaraan, permukiman, dan lahan kosong, ditemukan beberapa area yang layak dijadikan lokasi pembangunan sekolah baru. Lokasi ini berada di kawasan pinggiran seperti Gunung Anyar, Rungkut, dan Pakal yang memiliki kepadatan kendaraan rendah, aksesibilitas cukup, serta tersedia lahan kosong yang memadai.
-
-⭐ BAGIAN 5 — OUTPUT YANG WAJIB ADA
-
-Peta sebaran sekolah + jalan
-
-Peta buffer jalan utama
-
-Peta sekolah terdampak kepadatan kendaraan
-
-Peta zona minim kendaraan
-
-Peta overlay kandidat lokasi sekolah
-
-Peta rekomendasi final
+## 🙌 Terima Kasih
+Jika ada yang mau diskusi atau revisi peta/analisis, chat saja di grup.
